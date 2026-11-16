@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Fibraforte (simulazione) - Bizmatica - stato numeri</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; color: #1f2328; }
+  h1 { font-size: 1.3rem; }
+  .avviso { background: #fff8c5; border: 1px solid #d4a72c; padding: .6rem .8rem; border-radius: 6px; font-size: .9rem; }
+  table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+  th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid #d0d7de; }
+  .stato { font-weight: 600; padding: .1rem .5rem; border-radius: 1rem; }
+  .OK { background: #dafbe1; color: #116329; }
+  .SPAM { background: #ffebe9; color: #a40e26; }
+  code { background: #f6f8fa; padding: .1rem .3rem; border-radius: 4px; }
+  .nota { color: #57606a; font-size: .85rem; margin-top: .8rem; }
+</style>
+</head>
+<body>
+<h1>Fibraforte &mdash; stato dei numeri (simulazione) &mdash; Bizmatica</h1>
+<p class="avviso">Sito di <strong>simulazione per test</strong>: non &egrave; il servizio reale n&eacute; &egrave; affiliato ad esso.
+Mostra l'elenco usato dalla Data Action <code>Test_ChangeANI_GetFibraforte</code> dell'org di test Bizmatica.</p>
+<table>
+  <thead><tr><th>Priorit&agrave;</th><th>Numero</th><th>Stato</th></tr></thead>
+  <tbody id="righe"><tr><td colspan="3">Caricamento&hellip;</td></tr></tbody>
+</table>
+<p class="nota" id="nota">&nbsp;</p>
+<p>Dati in formato JSON: <a href="../api/bizmatica/numeri.json"><code>api/bizmatica/numeri.json</code></a>.
+Chi legge sceglie il primo numero con stato diverso da <code>SPAM</code>.</p>
+<script>
+function carica() {
+  fetch("../api/bizmatica/numeri.json?t=" + Date.now(), { cache: "no-store" })
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var tb = document.getElementById("righe");
+      tb.innerHTML = "";
+      d.numeri.forEach(function (n, i) {
+        var tr = document.createElement("tr");
+        var p = document.createElement("td"); p.textContent = String(i + 1);
+        var a = document.createElement("td"); a.textContent = n.numero;
+        var b = document.createElement("td");
+        var s = document.createElement("span");
+        s.className = "stato " + n.stato; s.textContent = n.stato;
+        b.appendChild(s); tr.appendChild(p); tr.appendChild(a); tr.appendChild(b); tb.appendChild(tr);
+      });
+      document.getElementById("nota").textContent = "Aggiornato alle " + new Date().toLocaleTimeString("it-IT") + " (si aggiorna ogni 30 secondi)";
+    })
+    .catch(function () {
+      document.getElementById("righe").innerHTML = "<tr><td colspan='3'>Errore nel caricamento dei dati.</td></tr>";
+    });
+}
+carica();
+setInterval(carica, 30000);
+</script>
+</body>
+</html>
