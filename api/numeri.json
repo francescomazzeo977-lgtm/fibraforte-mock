@@ -2,7 +2,7 @@
   "fonte": "Fibraforte (simulazione per test)",
   "numeri": [
     { "numero": "+390289784197", "stato": "SPAM" },
-    { "numero": "+390289784198", "stato": "OK" },
+    { "numero": "+390289784198", "stato": "SPAM" },
     { "numero": "+390289784199", "stato": "OK" }
   ]
 }
